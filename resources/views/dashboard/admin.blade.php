@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
+<!-- Main content -->
 @section('content')
-<div class="container">
-
-</div>
+<h1>this is admin dashboard</h1>
 @endsection
