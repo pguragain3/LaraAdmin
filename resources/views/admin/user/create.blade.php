@@ -4,56 +4,60 @@
 @section('content')
     @include('includes.forms')
     <div class="card card-primary">
-        <div class="card-header">
-            <h1 class="card-title">Add users</h1>
-        </div>
-        <!-- /.card-header -->
-        <!-- form start -->
-        <form id="quickForm" novalidate="novalidate" method="POST" action="{{ route('admin.users.store') }}">
-          @csrf
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Name</label>
-                    <input type="text" name="name" class="form-control" id="exampleInputName" placeholder="Name">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                  <label>User Type</label>
-                  <select class="form-control" name="role">
+        @if(Session::has('success'))
+        <h3 class="card-header" style="background: green;""> {{Session::get('success')}}</h3>
+@endif
+@if(Session::has('error'))
+
+    <h3 class="card-header" style="background: red;"> {{Session::get('error')}}</h3>
+
+@endif
+    </div>
+    <div class="card-header">
+        <h1 class="card-title">Add users</h1>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+
+    <form id="quickForm" novalidate="novalidate" method="POST" action="{{ route('admin.users.store') }}">
+        @csrf
+        <div class="card-body">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" name="name" class="form-control" id="exampleInputName" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label>User Type</label>
+                <select class="form-control" name="role">
                     <option value="2">User</option>
                     <option value="1">Admin</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Active Status</label>
-                  <select class="form-control" name="is_active">
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Active Status</label>
+                <select class="form-control" name="is_active">
                     <option value="0">Inactive</option>
                     <option value="1">Active</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1"
-                        placeholder="Password">
-                </div>
+                </select>
             </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1"
+                    placeholder="Password">
             </div>
-        </form>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
     </div>
     <script>
         $(function() {
-            $.noConflict();
-            // $.validator.setDefaults({
-            //     submitHandler: function() {
-            //         alert("Form successful submitted!");
-            //     }
-            });
             $('#quickForm').validate({
                 rules: {
                     email: {
@@ -64,9 +68,9 @@
                         required: true,
                         minlength: 8
                     },
-                    name:{
-                      required: true,
-                      minlength: 6
+                    name: {
+                        required: true,
+                        minlength: 6
                     }
                 },
                 messages: {
@@ -78,9 +82,9 @@
                         required: "Please provide a password",
                         minlength: "Your password must be at least 8 characters long"
                     },
-                    name:{
-                      required:"Please provede a name",
-                      minlength:"Name should be at least 6 characters long"
+                    name: {
+                        required: "Please provede a name",
+                        minlength: "Name should be at least 6 characters long"
                     }
                 },
                 errorElement: 'span',

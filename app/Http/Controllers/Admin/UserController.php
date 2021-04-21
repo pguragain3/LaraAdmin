@@ -17,8 +17,9 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('admin.user.index');
+    {   
+        $data=User::all(['name','email','role']);
+        return view('admin.user.index',['data'=>$data]);
     }
 
     /**
@@ -50,10 +51,10 @@ class UserController extends Controller
                 'description' => 'Created User ' . $request['email'],
                 'user_id' => Auth::user()->id
             ]);
-            return Redirect::back()->withErrors(['msg', 'The Message']);
+            return Redirect::back()->withSuccess('Success');
         }
         else{
-            dd($request);
+            return Redirect::back()->withError('Error');
         }
     }
 
