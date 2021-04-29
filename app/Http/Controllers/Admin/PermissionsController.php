@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
-use App\Models\History;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\Permission;
+use Illuminate\Http\Request;
 
-class UserController extends Controller
+class PermissionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +14,9 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        $data=User::all(['name','email','role']);
-        return view('admin.user.index',['data'=>$data]);
+    {
+        $data=Permission::all(['id','name']);
+        return view('admin.permissions.index',['data'=>$data]);
     }
 
     /**
@@ -29,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.user.create');
+        return view('admin.permissions.create');
     }
 
     /**
@@ -40,31 +37,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = new User;
-        $user->name = $request['name'];
-        $user->email = $request['email'];
-        $user->role = $request['role'];
-        $user->password = $request['password'];
-        $user->is_active = $request['is_active'];
-        if ($user->save()) {
-            History::create([
-                'description' => 'Created User ' . $request['email'],
-                'user_id' => Auth::user()->id
-            ]);
-            return Redirect::back()->withSuccess('Success');
-        }
-        else{
-            return Redirect::back()->withError('Error');
-        }
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Permission $permission)
     {
         //
     }
@@ -72,10 +54,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Permission $permission)
     {
         //
     }
@@ -84,10 +66,10 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Permission $permission)
     {
         //
     }
@@ -95,10 +77,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Permission $permission)
     {
         //
     }

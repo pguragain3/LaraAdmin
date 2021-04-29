@@ -110,7 +110,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item menu-open">
+                        <li class="nav-item menu-close">
                             <a href="/home" class="nav-link active">
                                 <i class="fas fa-cogs"></i>
                                 <p>
@@ -120,19 +120,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.users.index') }}" class="nav-link">
+                                    <a href="{{ route('admin.users.index') }}" class="nav-link active">
                                         <i class="fas fa-users"></i>
                                         <p>Users</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('admin.roles.index') }}" class="nav-link active">
                                         <i class="fas fa-user-tag"></i>
                                         <p>Roles</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('admin.permissions.index') }}" class="nav-link active">
                                         <i class="fas fa-user-shield"></i>
                                         <p>Permissions</p>
                                     </a>

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\History;
+use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
-class HistoryController extends Controller
+class RolesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,8 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        //
+        $data=Role::all(['id','name']);
+        return view('admin.roles.index',['data'=>$data]);
     }
 
     /**
@@ -24,7 +26,7 @@ class HistoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.roles.create');
     }
 
     /**
@@ -41,10 +43,10 @@ class HistoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\History  $history
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function show(History $history)
+    public function show(Role $role)
     {
         //
     }
@@ -52,10 +54,10 @@ class HistoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\History  $history
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function edit(History $history)
+    public function edit(Role $role)
     {
         //
     }
@@ -64,10 +66,10 @@ class HistoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\History  $history
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, History $history)
+    public function update(Request $request, Role $role)
     {
         //
     }
@@ -75,10 +77,10 @@ class HistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\History  $history
+     * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(History $history)
+    public function destroy(Role $role)
     {
         //
     }
