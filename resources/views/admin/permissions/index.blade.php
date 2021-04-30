@@ -26,10 +26,6 @@
                                         colspan="1" aria-sort="ascending"
                                         aria-label="Rendering engine: activate to sort column descending">Name
                                     </th>
-                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                        aria-label="Browser: activate to sort column ascending">Email</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                                        aria-label="Platform(s): activate to sort column ascending">Role</th>
                                     <th class="non-sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1">Action</th>
                                 </tr>
                             </thead>
@@ -39,8 +35,6 @@
                                 @foreach ($data as $data)
                                 <tr class="odd">
                                     <td class="dtr-control sorting_1" tabindex="0">{{ $data->name }}</td>
-                                    <td>{{ $data->email }}</td>
-                                    <td>{{ $data->role==1 ? "Admin":"User" }}</td>
                                     <td ><a href="">
                                         <div style="display: flex; flex-direction:row;">
                                             <button type="button" class="btn btn-block btn-warning btn-sm">Edit</button>
@@ -66,7 +60,7 @@
             $("#example1").DataTable({
                 "responsive": true,
                 "lengthChange": true,
-                "autoWidth": false,
+                "autoWidth": true,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });

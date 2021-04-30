@@ -58,6 +58,7 @@
     </div>
     <script>
         $(function() {
+            $.noConflict();
             $('#quickForm').validate({
                 rules: {
                     email: {
@@ -83,7 +84,7 @@
                         minlength: "Your password must be at least 8 characters long"
                     },
                     name: {
-                        required: "Please provede a name",
+                        required: "Please provide a name",
                         minlength: "Name should be at least 6 characters long"
                     }
                 },

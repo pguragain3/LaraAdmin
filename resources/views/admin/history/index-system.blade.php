@@ -4,14 +4,10 @@
 @section('content')
     @include('includes.tables')
     <hr>
-    <a href="{{ route('admin.roles.create') }}" style="text-decoration:none;"><button type="button" class="btn btn-block btn-success btn-lg" style="width:auto;">Add Role <i class="fas fa-user-plus"></i>
-
-    </button>
-</a>
     <hr>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Users</h3>
+            <h3 class="card-title">System History</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -24,9 +20,15 @@
                                 <tr role="row">
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-sort="ascending"
-                                        aria-label="Rendering engine: activate to sort column descending">Name
+                                        aria-label="Rendering engine: activate to sort column descending">ID
                                     </th>
-                                    <th class="non-sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1">Action</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                        aria-label="Browser: activate to sort column ascending">Description</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                        aria-label="Platform(s): activate to sort column ascending">User ID</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                        aria-label="Platform(s): activate to sort column ascending">IP address</th>
+                                    <th class="non-sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1">Time</th>
                                 </tr>
                             </thead>
                             
@@ -34,13 +36,11 @@
                                 @if ($data)
                                 @foreach ($data as $data)
                                 <tr class="odd">
-                                    <td class="dtr-control sorting_1" tabindex="0">{{ $data->name }}</td>
-                                    <td ><a href="">
-                                        <div style="display: flex; flex-direction:row;">
-                                            <button type="button" class="btn btn-block btn-warning btn-sm">Edit</button>
-                                        </a><a href=""> <button type="button" class="btn btn-block btn-danger btn-sm">Delete</button></a></td>
-                                        </div>
-                                        
+                                    <td class="dtr-control sorting_1" tabindex="0">{{ $data->id }}</td>
+                                    <td class="dtr-control sorting_1" tabindex="0">{{ $data->description }}</td>
+                                    <td class="dtr-control sorting_1" tabindex="0">{{ $data->user_id }}</td>
+                                    <td class="dtr-control sorting_1" tabindex="0">{{ $data->ip_address }}</td>
+                                    <td class="dtr-control sorting_1" tabindex="0">{{ $data->created_at }}</td>
                                 </tr>
                                 @endforeach
                             @endif
@@ -58,6 +58,7 @@
         $(function() {
             $.noConflict();
             $("#example1").DataTable({
+                "order": [[ 0, "desc" ]], //or asc 
                 "responsive": true,
                 "lengthChange": true,
                 "autoWidth": true,

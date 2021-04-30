@@ -35,33 +35,16 @@
     </div>
     <script>
         $(function() {
+            $.noConflict();
             $('#quickForm').validate({
                 rules: {
-                    email: {
-                        required: true,
-                        email: true,
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8
-                    },
                     name: {
                         required: true,
-                        minlength: 6
                     }
                 },
                 messages: {
-                    email: {
-                        required: "Please enter a email address",
-                        email: "Please enter a vaild email address"
-                    },
-                    password: {
-                        required: "Please provide a password",
-                        minlength: "Your password must be at least 8 characters long"
-                    },
                     name: {
-                        required: "Please provede a name",
-                        minlength: "Name should be at least 6 characters long"
+                        required: "Please provide a name of role",
                     }
                 },
                 errorElement: 'span',

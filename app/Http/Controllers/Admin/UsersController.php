@@ -49,7 +49,9 @@ class UsersController extends Controller
         if ($user->save()) {
             History::create([
                 'description' => 'Created User ' . $request['email'],
-                'user_id' => Auth::user()->id
+                'user_id' => Auth::user()->id,
+                'type'=>1,
+                'ip_address'=>$_SERVER['REMOTE_ADDR'],
             ]);
             return Redirect::back()->withSuccess('Success');
         }

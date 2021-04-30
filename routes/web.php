@@ -44,4 +44,8 @@ Route::prefix('/admin')->namespace('Admin')->name('admin.')->middleware(['web','
     Route::get('/permissions/edit','PermissionsController@edit')->name('permissions.edit');
     Route::post('/permissions/update','PermissionsController@update')->name('permissions.update');
     Route::get('/permissions/delete','PermissionsController@destroy')->name('permissions.destroy');
+
+    //History
+    Route::get('/application-history/','HistoriesController@application_index')->name('application-history');
+    Route::get('/system-history/','HistoriesController@system_index')->name('system-history');
 });

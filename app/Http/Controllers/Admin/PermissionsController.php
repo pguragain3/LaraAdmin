@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use App\Models\History;
 
 class PermissionsController extends Controller
 {
@@ -37,7 +40,20 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $permission = new Permission;
+        $permission->name = $convertedString=str_replace(' ', '-', $request['name']);
+        if ($permission->save()) {
+            History::create([
+                'description' => 'Created permission ' . $convertedString,
+                'user_id' => Auth::user()->id,
+                'type'=>1,
+                'ip_address'=>$_SERVER['REMOTE_ADDR'],
+            ]);
+            return Redirect::back()->withSuccess('Success');
+        }
+        else{
+            return Redirect::back()->withError('Error');
+        }
     }
 
     /**

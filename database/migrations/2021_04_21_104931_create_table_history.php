@@ -17,6 +17,8 @@ class CreateTableHistory extends Migration
             $table->id();
             $table->text('description');
             $table->integer('user_id');
+            $table->integer('type');
+            $table->string('ip_address');
             $table->timestamps();
         });
     }

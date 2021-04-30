@@ -35,6 +35,7 @@
     </div>
     <script>
         $(function() {
+            $.noConflict();
             $('#quickForm').validate({
                 rules: {
                     name: {

@@ -11,7 +11,9 @@ class History extends Model
 
     protected $fillable = [
         'description',
-        'user_id'
+        'user_id',
+        'type',
+        'ip_address'
     ];
     protected $table = 'history';
 }
