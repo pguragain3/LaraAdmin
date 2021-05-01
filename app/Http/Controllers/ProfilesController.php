@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProfilesController extends Controller
 {
@@ -13,8 +15,9 @@ class ProfilesController extends Controller
      */
     public function index()
     {
-        $data=User::where
-        return view('profile');
+        $data=DB::table('user_role_view')->where('id',Auth::user()->id)->get();
+        // dd($data);
+        return view('profile',['data'=>$data]);
     }
 
     /**

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\History;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\History;
+use App\Http\Controllers\UtilityFunctions;
 
 class RolesController extends Controller
 {
@@ -47,7 +48,7 @@ class RolesController extends Controller
                 'description' => 'Created role ' . $convertedString,
                 'user_id' => Auth::user()->id,
                 'type'=>1,
-                'ip_address'=>$_SERVER['REMOTE_ADDR'],
+                'ip_address'=>UtilityFunctions::getUserIP(),
             ]);
             return Redirect::back()->withSuccess('Success');
         } else {

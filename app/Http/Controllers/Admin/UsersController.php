@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\History;
-use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\UtilityFunctions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -17,8 +19,8 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $data=User::all(['name','email','role']);
+    {   
+        $data=DB::table('user_role_view')->get();
         return view('admin.user.index',['data'=>$data]);
     }
 
@@ -51,7 +53,7 @@ class UsersController extends Controller
                 'description' => 'Created User ' . $request['email'],
                 'user_id' => Auth::user()->id,
                 'type'=>1,
-                'ip_address'=>$_SERVER['REMOTE_ADDR'],
+                'ip_address'=>UtilityFunctions::getUserIP(),
             ]);
             return Redirect::back()->withSuccess('Success');
         }

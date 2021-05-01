@@ -103,7 +103,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="{{ route('home') }}" class="nav-link">
+                            <a href="{{ route('home') }}" class="nav-link active">
                                 <i class="fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard
