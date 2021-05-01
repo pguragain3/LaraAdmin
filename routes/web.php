@@ -49,3 +49,7 @@ Route::prefix('/admin')->namespace('Admin')->name('admin.')->middleware(['web','
     Route::get('/application-history/','HistoriesController@application_index')->name('application-history');
     Route::get('/system-history/','HistoriesController@system_index')->name('system-history');
 });
+
+Route::prefix('/profile')->name('profile.')->middleware(['web','auth'])->group(function () {
+    Route::get('/','ProfilesController@index')->name('index');
+});

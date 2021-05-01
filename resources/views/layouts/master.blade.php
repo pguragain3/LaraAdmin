@@ -142,7 +142,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                         <li class="nav-item menu-open">
                             <a href="/home" class="nav-link active">
-                                <i class="fas fa-cogs"></i>
+                                <i class="fas fa-history"></i>
                                 <p>
                                     History
                                     <i class="right fas fa-angle-left"></i>
@@ -151,15 +151,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="{{ route('admin.application-history') }}" class="nav-link active">
-                                        <i class="fas fa-users"></i>
                                         <p>Application History</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('admin.system-history') }}" class="nav-link active">
-                                        <i class="fas fa-user-tag"></i>
+                                        
                                         <p>System History</p>
                                     </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item menu-open">
+                            <a href="/home" class="nav-link active">
+                                <i class="far fa-user-circle"></i>
+                                <p>
+                                    {{ Auth::user()->name }}
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('profile.index') }}" class="nav-link active">
+                                        <i class="fas fa-user-circle"></i>
+                                        <p>Profile</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Logout
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
                                 </li>
                             </ul>
                         </li>
