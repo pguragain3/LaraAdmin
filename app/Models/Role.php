@@ -10,6 +10,6 @@ class Role extends Model
     use HasFactory;
 
     public function permissions(){
-        return $this->belongsToMany(Permission::class,'roles_permissions');
+        return $this->belongsToMany(Permission::class,'roles_permissions')->withPivot('role_id','permission_id');
     }
 }

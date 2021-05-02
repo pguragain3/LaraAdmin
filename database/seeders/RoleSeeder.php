@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use Illuminate\Database\Seeder;
+use App\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
@@ -20,5 +21,9 @@ class RoleSeeder extends Seeder
                 'name'=>$role
             ]);
         }
+
+        $permission=Permission::all()->pluck('id');
+        $superadmin=Role::findOrFail(1);
+        $superadmin->permissions()->sync($permission);
     }
 }

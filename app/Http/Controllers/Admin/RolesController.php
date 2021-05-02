@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Role;
 use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateRoleRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\UtilityFunctions;
 
@@ -19,8 +21,8 @@ class RolesController extends Controller
      */
     public function index()
     {
-        $data = Role::all(['id', 'name']);
-        return view('admin.roles.index', ['data' => $data]);
+        $role = Role::with('permissions')->get();
+        return view('admin.roles.index', ['role' => $role]);
     }
 
     /**
@@ -39,20 +41,22 @@ class RolesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRoleRequest $request)
     {
+        // dd($request);
         $role = new Role;
-        $role->name = $convertedString = str_replace(' ', '-', $request['name']);
+        $role->name = $convertedString=str_replace(' ', '-', $request['name']);
         if ($role->save()) {
+            $role->permissions()->sync($request['permissions']);
             History::create([
                 'description' => 'Created role ' . $convertedString,
                 'user_id' => Auth::user()->id,
                 'type'=>1,
                 'ip_address'=>UtilityFunctions::getUserIP(),
             ]);
-            return Redirect::back()->withSuccess('Success');
+            return Redirect::back()->with('successMessage','Success!! Role created');
         } else {
-            return Redirect::back()->withError('Error');
+            return Redirect::back()->with('errorMessage','Error!! Role not created');
         }
     }
 

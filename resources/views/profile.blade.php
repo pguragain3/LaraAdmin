@@ -3,7 +3,6 @@
 <!-- Main content -->
 @section('content')
     @include('includes.forms')
-    @include('includes.messages')
 
     <div class="container-fluid">
         <div class="row">

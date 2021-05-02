@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Role;
+use App\Models\User;
+
 class UtilityFunctions{
    static function getUserIP() {
         $ipaddress = '';
@@ -21,5 +24,14 @@ class UtilityFunctions{
         else
             $ipaddress = 'UNKNOWN';
         return $ipaddress;
+    }
+
+    static function getRole(){
+        if (User::isSuperAdmin()) {
+            $role = Role::whereNotIn('id', [1])->get();
+        } else {
+            $role = Role::whereNotIn('id', [1, 2])->get();
+        }
+        return $role;
     }
 }

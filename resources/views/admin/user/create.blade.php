@@ -3,13 +3,11 @@
 <!-- Main content -->
 @section('content')
     @include('includes.forms')
-    @include('includes.messages')
     <div class="card-header">
         <h1 class="card-title">Add users</h1>
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-
     <form id="quickForm" novalidate="novalidate" method="POST" action="{{ route('admin.users.store') }}">
         @csrf
         <div class="card-body">
@@ -21,13 +19,16 @@
                 <label for="exampleInputEmail1">Email address</label>
                 <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
             </div>
-            {{-- <div class="form-group">
-                <label>User Type</label>
+            <div class="form-group">
+                <label>Role</label>
                 <select class="form-control" name="role">
-                    <option value="2">User</option>
-                    <option value="1">Admin</option>
+                    @if (isset($role))
+                    @foreach ($role as $role)
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                    @endif
                 </select>
-            </div> --}}
+            </div>
             <div class="form-group">
                 <label>Active Status</label>
                 <select class="form-control" name="is_active">

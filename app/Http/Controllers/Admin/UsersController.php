@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\UtilityFunctions;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\UtilityFunctions;
 
 class UsersController extends Controller
 {
@@ -19,9 +23,14 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        $data=DB::table('user_role_view')->get();
-        return view('admin.user.index',['data'=>$data]);
+    {
+        if (User::isAdmin()) {
+            $data = User::with('roles')->whereNotIn('role', [1, 2])->get();
+            return view('admin.user.index', ['data' => $data]);
+        } else if (User::isSuperAdmin()) {
+            $data = User::with('roles')->whereNotIn('role', [1])->get();
+            return view('admin.user.index', ['data' => $data]);
+        }
     }
 
     /**
@@ -31,7 +40,13 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('admin.user.create');
+        if (User::isSuperAdmin()) {
+            $role = Role::whereNotIn('id', [1])->get();
+            return view('admin.user.create', ['role' => $role]);
+        } else {
+            $role = Role::whereNotIn('id', [1, 2])->get();
+            return view('admin.user.create', ['role' => $role]);
+        }
     }
 
     /**
@@ -40,25 +55,24 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateUserRequest $request)
     {
         $user = new User;
         $user->name = $request['name'];
         $user->email = $request['email'];
-        // $user->role = $request['role'];
+        $user->role = $request['role'];
         $user->password = $request['password'];
         $user->is_active = $request['is_active'];
         if ($user->save()) {
             History::create([
                 'description' => 'Created User ' . $request['email'],
                 'user_id' => Auth::user()->id,
-                'type'=>1,
-                'ip_address'=>UtilityFunctions::getUserIP(),
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
             ]);
-            return Redirect::back()->withSuccess('Success');
-        }
-        else{
-            return Redirect::back()->withError('Error');
+            return Redirect::back()->with('successMessage', 'Success!! User Created');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! User not created');
         }
     }
 
@@ -68,9 +82,8 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($id)
     {
-        //
     }
 
     /**
@@ -79,9 +92,12 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        //
+        $role = UtilityFunctions::getRole();
+        $user = User::with('roles')->whereIn('id', [$id])->first();
+        // dd($user,$role);
+        return view('admin.user.update', ['role' => $role, 'user' => $user]);
     }
 
     /**
@@ -91,9 +107,31 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
-        //
+        $user = User::find($request->id);
+        $this->validate($request,[
+            'name' => 'required|min:3|regex:/[a-zA-Z]/',
+            'email' => ['required', Rule::unique('users')->ignore($request->id)],
+            'role' => 'required',
+            'is_active'=>'required',
+        ]);
+
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        $user->role = $request['role'];
+        $user->is_active = $request['is_active'];
+        if ($user->update()) {
+            History::create([
+                'description' => 'Update user with user id ' . $request['id'],
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! User Information Updated');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! User Information Not Updated');
+        }
     }
 
     /**
@@ -102,8 +140,19 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        if ($user->delete()) {
+            History::create([
+                'description' => 'Delete user with user id ' . $id,
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! User Deleted');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! Failed to delete user');
+        }
     }
 }

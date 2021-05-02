@@ -14,7 +14,7 @@ class CreateViewsTable extends Migration
      */
     public function up()
     {
-        DB::statement('create view user_role_view as select u.id,u.name,u.email,u.is_active,u.created_at,r.name as role from users u, users_roles ur,roles r where u.id = ur.user_id and ur.role_id=r.id');
+        //DB::statement('create view user_role_view as select u.id,u.name,u.email,u.is_active,u.created_at,r.name as role from users u, users_roles ur,roles r where u.id = ur.user_id and ur.role_id=r.id');
     }
 
     /**
@@ -24,6 +24,6 @@ class CreateViewsTable extends Migration
      */
     public function down()
     {
-        DB::statement('DROP VIEW "user_role_view"');
+        //DB::statement('DROP VIEW "user_role_view"');
     }
 }

@@ -3,7 +3,6 @@
 <!-- Main content -->
 @section('content')
     @include('includes.forms')
-    @include('includes.messages')
     <div class="card-header">
         <h1 class="card-title">Add Permission</h1>
     </div>
@@ -15,7 +14,8 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="exampleInputEmail1">Name</label>
-                <input type="text" name="name" class="form-control" id="exampleInputName" placeholder="Name">
+                <input type="text" name="name" class="form-control" id="exampleInputName" placeholder="Name"
+                    onkeyup="replaceFunction(this.value)">
             </div>
         </div>
         <!-- /.card-body -->
@@ -51,6 +51,10 @@
                 }
             });
         });
+
+        function replaceFunction(val) {
+            document.getElementById('exampleInputName').value = val.replace(' ', '-');
+        }
 
     </script>
 @endsection
