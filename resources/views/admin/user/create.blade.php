@@ -21,13 +21,13 @@
                 <label for="exampleInputEmail1">Email address</label>
                 <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
             </div>
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label>User Type</label>
                 <select class="form-control" name="role">
                     <option value="2">User</option>
                     <option value="1">Admin</option>
                 </select>
-            </div>
+            </div> --}}
             <div class="form-group">
                 <label>Active Status</label>
                 <select class="form-control" name="is_active">

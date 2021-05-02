@@ -45,7 +45,7 @@ class UsersController extends Controller
         $user = new User;
         $user->name = $request['name'];
         $user->email = $request['email'];
-        $user->role = $request['role'];
+        // $user->role = $request['role'];
         $user->password = $request['password'];
         $user->is_active = $request['is_active'];
         if ($user->save()) {
