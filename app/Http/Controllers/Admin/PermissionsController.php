@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\History;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 use App\Http\Controllers\UtilityFunctions;
 
 class PermissionsController extends Controller
@@ -20,6 +21,7 @@ class PermissionsController extends Controller
      */
     public function index()
     {
+        abort_unless(Gate::allows('hasPermission','view_permissions'),403);
         $data=Permission::all(['id','name']);
         return view('admin.permissions.index',['data'=>$data]);
     }
@@ -31,6 +33,7 @@ class PermissionsController extends Controller
      */
     public function create()
     {
+        abort_unless(Gate::allows('hasPermission','create_permissions'),403);
         return view('admin.permissions.create');
     }
 
@@ -42,6 +45,7 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
+        abort_unless(Gate::allows('hasPermission','create_permissions'),403);
         $permission = new Permission;
         $permission->name = $convertedString=str_replace(' ', '-', $request['name']);
         if ($permission->save()) {
@@ -76,6 +80,7 @@ class PermissionsController extends Controller
      */
     public function edit($id)
     {
+        abort_unless(Gate::allows('hasPermission','update_permissions'),403);
         $permission = Permission::whereIn('id', [$id])->first();
         return view('admin.permissions.update', ['permission' => $permission]);
     }
@@ -89,6 +94,7 @@ class PermissionsController extends Controller
      */
     public function update(Request $request)
     {
+        abort_unless(Gate::allows('hasPermission','update_permissions'),403);
         $permission=Permission::find($request->id);
         $this->validate($request,[
             'name' => ['required', Rule::unique('permissions')->ignore($request->id)],
@@ -115,6 +121,7 @@ class PermissionsController extends Controller
      */
     public function destroy($id)
     {
+        abort_unless(Gate::allows('hasPermission','delete_permissions'),403);
         $permission=Permission::find($id);
         if ($permission->delete()) {
             $permission->roles()->detach();

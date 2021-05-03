@@ -76,6 +76,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                         </li>
+                        @if (Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
                         <li class="nav-item menu-open">
                             <a href="/home" class="nav-link active">
                                 <i class="fas fa-cogs"></i>
@@ -85,27 +86,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.users.index') }}" class="nav-link active">
-                                        <i class="fas fa-users"></i>
-                                        <p>Users</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.roles.index') }}" class="nav-link active">
-                                        <i class="fas fa-user-tag"></i>
-                                        <p>Roles</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.permissions.index') }}" class="nav-link active">
-                                        <i class="fas fa-user-shield"></i>
-                                        <p>Permissions</p>
-                                    </a>
-                                </li>
+                                @can('hasPermission', 'view_users')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link active">
+                                            <i class="fas fa-users"></i>
+                                            <p>Users</p>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('hasPermission', 'view_roles')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.roles.index') }}" class="nav-link active">
+                                            <i class="fas fa-user-tag"></i>
+                                            <p>Roles</p>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('hasPermission', 'view_permissions')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.permissions.index') }}" class="nav-link active">
+                                            <i class="fas fa-user-shield"></i>
+                                            <p>Permissions</p>
+                                        </a>
+                                    </li>
+                                @endcan
                             </ul>
                         </li>
-
+                        @endif
+                       
+                        @can('hasPermission','view_history')
                         <li class="nav-item menu-open">
                             <a href="/home" class="nav-link active">
                                 <i class="fas fa-history"></i>
@@ -128,6 +137,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </li>
                             </ul>
                         </li>
+                        @endcan
+   
 
                         <li class="nav-item menu-open">
                             <a href="/home" class="nav-link active">

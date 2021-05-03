@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
-use App\Models\User;
 use App\Models\History;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\CreateRoleRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\UtilityFunctions;
@@ -24,7 +23,7 @@ class RolesController extends Controller
      */
     public function index()
     {
-
+        abort_unless(Gate::allows('hasPermission','view_roles'),403);
             $role = UtilityFunctions::getRole();
             return view('admin.roles.index', ['role' => $role]);
     }
@@ -36,6 +35,7 @@ class RolesController extends Controller
      */
     public function create()
     {
+        abort_unless(Gate::allows('hasPermission','create_roles'),403);
         return view('admin.roles.create');
     }
 
@@ -47,7 +47,7 @@ class RolesController extends Controller
      */
     public function store(CreateRoleRequest $request)
     {
-        // dd($request);
+        abort_unless(Gate::allows('hasPermission','create_roles'),403);
         $role = new Role;
         $role->name = $convertedString=str_replace(' ', '-', $request['name']);
         if ($role->save()) {
@@ -83,7 +83,8 @@ class RolesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    { 
+        abort_unless(Gate::allows('hasPermission','update_roles'),403);
         $role = Role::with('permissions')->whereIn('id',[$id])->first();
         $permissions=Permission::all();
         return view('admin.roles.update', ['role' => $role, 'permission'=>$permissions]);
@@ -98,6 +99,7 @@ class RolesController extends Controller
      */
     public function update(Request $request)
     {
+        abort_unless(Gate::allows('hasPermission','update_roles'),403);
         $role=Role::find($request->id);
         $this->validate($request,[
             'name' => ['required', Rule::unique('roles')->ignore($request->id)],
@@ -125,7 +127,8 @@ class RolesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+    { 
+        abort_unless(Gate::allows('hasPermission','delete_roles'),403);
         $role=Role::find($id);
         if ($role->delete()) {
             $role->permissions()->detach();

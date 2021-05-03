@@ -7,12 +7,11 @@ use App\Models\User;
 use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\UtilityFunctions;
 
@@ -25,6 +24,7 @@ class UsersController extends Controller
      */
     public function index()
     {
+        abort_unless(Gate::allows('hasPermission','view_users'),403);
         if (User::isAdmin()) {
             $data = User::with('roles')->whereNotIn('role', [1, 2])->get();
             return view('admin.user.index', ['data' => $data]);
@@ -41,6 +41,7 @@ class UsersController extends Controller
      */
     public function create()
     {
+        abort_unless(Gate::allows('hasPermission','create_users'),403);
         if (User::isSuperAdmin()) {
             $role = Role::whereNotIn('id', [1])->get();
             return view('admin.user.create', ['role' => $role]);
@@ -58,6 +59,7 @@ class UsersController extends Controller
      */
     public function store(CreateUserRequest $request)
     {
+        abort_unless(Gate::allows('hasPermission','create_users'),403);
         $user = new User;
         $user->name = $request['name'];
         $user->email = $request['email'];
@@ -95,6 +97,7 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
+        abort_unless(Gate::allows('hasPermission','update_users'),403);
         $role = UtilityFunctions::getRole();
         $user = User::with('roles')->whereIn('id', [$id])->first();
         // dd($user,$role);
@@ -110,6 +113,7 @@ class UsersController extends Controller
      */
     public function update(Request $request)
     {
+        abort_unless(Gate::allows('hasPermission','update_users'),403);
         $user = User::find($request->id);
         $this->validate($request,[
             'name' => 'required|min:3|regex:/[a-zA-Z]/',
@@ -143,6 +147,7 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
+        abort_unless(Gate::allows('hasPermission','delete_users'),403);
         $user = User::find($id);
         if ($user->forceDelete()) {
             History::create([
