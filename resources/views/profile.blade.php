@@ -15,19 +15,19 @@
                             <img class="profile-user-img img-fluid img-circle" src="../../dist/img/user4-128x128.jpg"
                                 alt="User profile picture">
                         </div>
-                        <h3 class="profile-username text-center">{{ $data[0]->name }}</h3>
+                        <h3 class="profile-username text-center">{{ $data->name }}</h3>
 
-                        <p class="text-muted text-center">{{ $data[0]->role }}</p>
+                        <p class="text-muted text-center">{{ $data->roles->name }}</p>
 
                         <ul class="list-group list-group-unbordered mb-3">
                             <li class="list-group-item">
-                                <b>Email</b> <a class="float-right">{{ $data[0]->email }}</a>
+                                <b>Email</b> <a class="float-right">{{ $data->email }}</a>
                             </li>
                             <li class="list-group-item">
-                                <b>Role</b> <a class="float-right">{{ $data[0]->role }}</a>
+                                <b>Role</b> <a class="float-right">{{ $data->roles->name }}</a>
                             </li>
                             <li class="list-group-item">
-                                <b>User Since</b> <a class="float-right"> {{ $data[0]->created_at }}</a>
+                                <b>User Since</b> <a class="float-right"> {{ $data->created_at }}</a>
                             </li>
                         </ul>
                     </div>
@@ -54,8 +54,9 @@
                             <!-- /.tab-pane -->
                             <div class="tab-pane" id="change_password">
                                 <!-- Change Password -->
-                                <form class="form-horizontal">
+                                <form class="form-horizontal" method="POST" action="{{ route('profile.update.password') }}">
                                     @csrf
+                                    <input type="hidden" value="{{ $data->id }}" name="id" id="">
                                     <div class="form-group row">
                                         <label for="inputCurrentPassword" class="col-sm-2 col-form-label">Current Password</label>
                                         <div class="col-sm-10">
@@ -66,7 +67,7 @@
                                     <div class="form-group row">
                                         <label for="inputNewPassword" class="col-sm-2 col-form-label">New Password</label>
                                         <div class="col-sm-10">
-                                            <input type="password" class="form-control" id="inputNewPassword" name="new" placeholder="New Password" required>
+                                            <input type="password" class="form-control" id="inputNewPassword" name="new_password" placeholder="New Password" required>
                                         </div>
                                     </div>
 
@@ -87,18 +88,19 @@
                             <!-- /.tab-pane -->
 
                             <div class="tab-pane active" id="update_profile">
-                                <form class="form-horizontal">
+                                <form class="form-horizontal" method="POST" action="{{ route('profile.update.info') }}">
                                     @csrf
+                                    <input type="hidden" value="{{ $data->id }}" name="id" id="">
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                                         <div class="col-sm-10">
-                                            <input type="email" class="form-control" name="name" value={{ $data[0]->name }} id="inputName" required >
+                                            <input type="text" class="form-control" name="name" value={{ $data->name }} id="inputName" required >
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                                         <div class="col-sm-10">
-                                            <input type="email" class="form-control" name="email"  value={{ $data[0]->email }} id="inputEmail" required >
+                                            <input type="email" class="form-control" name="email"  value={{ $data->email }} id="inputEmail" required >
                                         </div>
                                     </div>
                                     <div class="form-group row">

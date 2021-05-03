@@ -3,11 +3,13 @@
 <!-- Main content -->
 @section('content')
     @include('includes.tables')
+    @include('includes.modals')
     <hr>
-    <a href="{{ route('admin.permissions.create') }}" style="text-decoration:none;"><button type="button" class="btn btn-block btn-success btn-lg" style="width:auto;">Add Permission <i class="fas fa-user-plus"></i>
+    <a href="{{ route('admin.permissions.create') }}" style="text-decoration:none;"><button type="button"
+            class="btn btn-block btn-success btn-lg" style="width:auto;">Add Permission <i class="fas fa-user-plus"></i>
 
-    </button>
-</a>
+        </button>
+    </a>
     <hr>
     <div class="card">
         <div class="card-header">
@@ -26,35 +28,44 @@
                                         colspan="1" aria-sort="ascending"
                                         aria-label="Rendering engine: activate to sort column descending">Name
                                     </th>
-                                    <th class="non-sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1">Action</th>
+                                    <th class="non-sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1">
+                                        Action</th>
                                 </tr>
                             </thead>
-                            
+
                             <tbody>
                                 @if ($data)
-                                @foreach ($data as $data)
-                                <tr class="odd">
-                                    <td class="dtr-control sorting_1" tabindex="0">{{ $data->name }}</td>
-                                    <td ><a href="">
-                                        <div style="display: flex; flex-direction:row;">
-                                            <button type="button" class="btn btn-block btn-warning btn-sm">Edit</button>
-                                        </a><a href=""> <button type="button" class="btn btn-block btn-danger btn-sm">Delete</button></a></td>
-                                        </div>
-                                        
-                                </tr>
-                                @endforeach
-                            @endif
-                                
-                            </tbody>
-                        </table>
+                                    @foreach ($data as $data)
+                                        <tr class="odd">
+                                            <td class="dtr-control sorting_1" tabindex="0">{{ $data->name }}</td>
+                                            <td><a href="">
+                                                    <div style="display: flex; flex-direction:row;">
+                                                        <a href="/admin/permissions/edit/{{ $data->id }}"><button
+                                                                type="button"
+                                                                class="btn btn-block btn-warning btn-sm">Edit</button></a>
+                                                                <button type="button" class="btn btn-block btn-danger btn-sm"
+                                                                data-toggle="modal" data-target="#modal-default" style="width:auto;"
+                                                                onclick="replaceLinkFunction(<?php echo $data->id; ?>)">Delete</button>
+                                                            </td>
                     </div>
+
+                    </tr>
+                    @endforeach
+                    @endif
+
+                    </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <!-- /.card-body -->
+    </div>
+    <!-- /.card-body -->
     </div>
     <!-- Page specific script -->
     <script>
+        function replaceLinkFunction(id) {
+            document.getElementById('confirm_button').setAttribute("href", "/admin/permissions/delete/".concat(id));
+        }
         $(function() {
             $.noConflict();
             $("#example1").DataTable({

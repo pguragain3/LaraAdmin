@@ -3,6 +3,7 @@
 <!-- Main content -->
 @section('content')
     @include('includes.tables')
+    @include('includes.modals')
     <hr>
     <a href="{{ route('admin.users.create') }}" style="text-decoration:none;"><button type="button"
             class="btn btn-block btn-success btn-lg" style="width:auto;">Add User <i class="fas fa-user-plus"></i>
@@ -57,8 +58,14 @@
                                                     <div style="display: flex; flex-direction:row;">
                                                         <button type="button"
                                                             class="btn btn-block btn-warning btn-sm">Edit</button>
-                                                </a><a href="/admin/users/delete/{{ $data->id }}"> <button type="button"
-                                                        class="btn btn-block btn-danger btn-sm">Delete</button></a></td>
+                                                </a>
+
+
+                                                <button type="button" class="btn btn-block btn-danger btn-sm"
+                                                    data-toggle="modal" data-target="#modal-default" style="width:auto;"
+                                                    onclick="replaceLinkFunction(<?php echo $data->id; ?>)">Delete</button>
+
+                                            </td>
                     </div>
 
                     </tr>
@@ -75,6 +82,9 @@
     </div>
     <!-- Page specific script -->
     <script>
+        function replaceLinkFunction(id) {
+            document.getElementById('confirm_button').setAttribute("href", "/admin/users/delete/".concat(id));
+        }
         $(function() {
             $.noConflict();
             $("#example1").DataTable({

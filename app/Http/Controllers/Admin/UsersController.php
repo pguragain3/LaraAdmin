@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Redirect;
@@ -61,7 +62,7 @@ class UsersController extends Controller
         $user->name = $request['name'];
         $user->email = $request['email'];
         $user->role = $request['role'];
-        $user->password = $request['password'];
+        $user->password = Hash::make($request['password']);
         $user->is_active = $request['is_active'];
         if ($user->save()) {
             History::create([
@@ -143,9 +144,9 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        if ($user->delete()) {
+        if ($user->forceDelete()) {
             History::create([
-                'description' => 'Delete user with user id ' . $id,
+                'description' => 'Deleted user with user id ' . $id,
                 'user_id' => Auth::user()->id,
                 'type' => 1,
                 'ip_address' => UtilityFunctions::getUserIP(),

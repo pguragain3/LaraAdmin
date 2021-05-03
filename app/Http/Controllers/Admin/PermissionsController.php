@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\UtilityFunctions;
 
 class PermissionsController extends Controller
@@ -50,10 +51,9 @@ class PermissionsController extends Controller
                 'type'=>1,
                 'ip_address'=>UtilityFunctions::getUserIP(),
             ]);
-            return Redirect::back()->withSuccess('Success');
-        }
-        else{
-            return Redirect::back()->withError('Error');
+            return Redirect::back()->with('successMessage','Success!! Permission created');
+        } else {
+            return Redirect::back()->with('errorMessage','Error!! Permission not created');
         }
     }
 
@@ -74,9 +74,10 @@ class PermissionsController extends Controller
      * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function edit(Permission $permission)
+    public function edit($id)
     {
-        //
+        $permission = Permission::whereIn('id', [$id])->first();
+        return view('admin.permissions.update', ['permission' => $permission]);
     }
 
     /**
@@ -86,9 +87,24 @@ class PermissionsController extends Controller
      * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permission $permission)
+    public function update(Request $request)
     {
-        //
+        $permission=Permission::find($request->id);
+        $this->validate($request,[
+            'name' => ['required', Rule::unique('permissions')->ignore($request->id)],
+        ]);
+        $permission->name=$request->name;
+        if ($permission->update()) {
+            History::create([
+                'description' => 'Update permission with id ' . $request->id,
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! Permission Updated');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! Permission Not Updated');
+        }
     }
 
     /**
@@ -97,8 +113,20 @@ class PermissionsController extends Controller
      * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Permission $permission)
+    public function destroy($id)
     {
-        //
+        $permission=Permission::find($id);
+        if ($permission->delete()) {
+            $permission->roles()->detach();
+            History::create([
+                'description' => 'Deleted permission with id ' . $id,
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! Permission Deleted');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! Failed to delete permission');
+        }
     }
 }

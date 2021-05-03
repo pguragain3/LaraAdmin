@@ -28,9 +28,9 @@ class UtilityFunctions{
 
     static function getRole(){
         if (User::isSuperAdmin()) {
-            $role = Role::whereNotIn('id', [1])->get();
+            $role = Role::with('permissions')->whereNotIn('id', [1])->get();
         } else {
-            $role = Role::whereNotIn('id', [1, 2])->get();
+            $role = Role::with('permissions')->whereNotIn('id', [1, 2])->get();
         }
         return $role;
     }

@@ -47,4 +47,6 @@ Route::prefix('/admin')->namespace('Admin')->name('admin.')->middleware(['web','
 
 Route::prefix('/profile')->name('profile.')->middleware(['web','auth'])->group(function () {
     Route::get('/','ProfilesController@index')->name('index');
+    Route::post('/update/info','ProfilesController@updateInfo')->name('update.info');
+    Route::post('/update/password','ProfilesController@updatePassword')->name('update.password');
 });

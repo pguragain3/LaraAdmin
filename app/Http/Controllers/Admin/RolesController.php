@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
+use App\Models\User;
 use App\Models\History;
+use App\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -21,8 +24,9 @@ class RolesController extends Controller
      */
     public function index()
     {
-        $role = Role::with('permissions')->get();
-        return view('admin.roles.index', ['role' => $role]);
+
+            $role = UtilityFunctions::getRole();
+            return view('admin.roles.index', ['role' => $role]);
     }
 
     /**
@@ -78,9 +82,11 @@ class RolesController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function edit(Role $role)
+    public function edit($id)
     {
-        //
+        $role = Role::with('permissions')->whereIn('id',[$id])->first();
+        $permissions=Permission::all();
+        return view('admin.roles.update', ['role' => $role, 'permission'=>$permissions]);
     }
 
     /**
@@ -90,9 +96,26 @@ class RolesController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request)
     {
-        //
+        $role=Role::find($request->id);
+        $this->validate($request,[
+            'name' => ['required', Rule::unique('roles')->ignore($request->id)],
+            'permissions'=>'required',
+        ]);
+        $role->name = $request['name'];
+        if ($role->update()) {
+            $role->permissions()->sync($request['permissions']);
+            History::create([
+                'description' => 'Update Role with id ' . $request->id,
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! Role Updated');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! Role Not Updated');
+        }
     }
 
     /**
@@ -101,8 +124,20 @@ class RolesController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
-        //
+        $role=Role::find($id);
+        if ($role->delete()) {
+            $role->permissions()->detach();
+            History::create([
+                'description' => 'Deleted role with id ' . $id,
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! Role Deleted');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! Failed to delete Role');
+        }
     }
 }

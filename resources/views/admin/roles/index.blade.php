@@ -3,6 +3,7 @@
 <!-- Main content -->
 @section('content')
     @include('includes.tables')
+    @include('includes.modals')
     <hr>
     <a href="{{ route('admin.roles.create') }}" style="text-decoration:none;"><button type="button"
             class="btn btn-block btn-success btn-lg" style="width:auto;">Add Role <i class="fas fa-user-plus"></i>
@@ -42,16 +43,22 @@
                                         <tr class="odd">
                                             <td class="dtr-control sorting_1" tabindex="0">{{ $role->name }}</td>
 
-                                            <td class="dtr-control sorting_1" tabindex="0">@foreach ($role->permissions as $permission)
-                                                <span class="badge badge-primary" style="font-size: medium">{{ $permission->name }}</span>
-                                            @endforeach</td>
+                                            <td class="dtr-control sorting_1" tabindex="0">
+                                                @foreach ($role->permissions as $permission)
+                                                    <span class="badge badge-primary"
+                                                        style="font-size: medium">{{ $permission->name }}</span>
+                                                @endforeach
+                                            </td>
 
                                             <td><a href="/admin/roles/edit/{{ $role->id }}">
                                                     <div style="display: flex; flex-direction:row;">
                                                         <button type="button"
                                                             class="btn btn-block btn-warning btn-sm">Edit</button>
-                                                </a><a href="/admin/roles/delete/{{ $role->id }}"> <button type="button"
-                                                        class="btn btn-block btn-danger btn-sm">Delete</button></a></td>
+                                                </a>
+                                                <button type="button" class="btn btn-block btn-danger btn-sm"
+                                                    data-toggle="modal" data-target="#modal-default" style="width:auto;"
+                                                    onclick="replaceLinkFunction(<?php echo $role->id; ?>)">Delete</button>
+                                            </td>
                     </div>
 
                     </tr>
@@ -68,6 +75,9 @@
     </div>
     <!-- Page specific script -->
     <script>
+        function replaceLinkFunction(id) {
+            document.getElementById('confirm_button').setAttribute("href", "/admin/roles/delete/".concat(id));
+        }
         $(function() {
             $.noConflict();
             $("#example1").DataTable({
