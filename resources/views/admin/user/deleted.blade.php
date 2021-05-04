@@ -12,8 +12,8 @@
 
             </button>
         </a>
-        <a href="{{ route('admin.users.viewDeleted') }}" style="text-decoration:none;width:auto;padding:5px"><button
-                type="button" class="btn btn-block btn-warning btn-lg" style="width:auto;">Deleted Users <i
+        <a href="{{ route('admin.users.index') }}" style="text-decoration:none;width:auto;padding:5px"><button
+                type="button" class="btn btn-block btn-warning btn-lg" style="width:auto;">Active Users <i
                     class="fas fa-users"></i>
 
             </button>
@@ -22,7 +22,7 @@
     <hr>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Users</h3>
+            <h3 class="card-title">Deleted Users</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -63,17 +63,17 @@
 
                                                 @endif
                                             </td>
-                                            <td><a href="/admin/users/edit/{{ $data->id }}">
-                                                    <div style="display: flex; flex-direction:row;">
-                                                        <button type="button"
-                                                            class="btn btn-block btn-warning btn-sm">Edit</button>
-                                                </a>
+                                            <td>
+                                                <div style="display: flex;">
+                                                    <button type="button" class="btn btn-block btn-warning btn-sm"
+                                                data-toggle="modal" data-target="#modal-default" style="width:auto;"
+                                                onclick="replaceLinkFunction('/admin/users/restore/'.concat(<?php echo $data->id; ?>))">Restore</button>
 
 
                                                 <button type="button" class="btn btn-block btn-danger btn-sm"
                                                     data-toggle="modal" data-target="#modal-default" style="width:auto;"
-                                                    onclick="replaceLinkFunction(<?php echo $data->id; ?>)">Delete</button>
-
+                                                    onclick="replaceLinkFunction('/admin/users/deletePermanent/'.concat(<?php echo $data->id; ?>))">Permanent Delete</button>
+                                                </div>
                                             </td>
                     </div>
 
@@ -91,8 +91,8 @@
     </div>
     <!-- Page specific script -->
     <script>
-        function replaceLinkFunction(id) {
-            document.getElementById('confirm_button').setAttribute("href", "/admin/users/delete/".concat(id));
+        function replaceLinkFunction(link) {
+            document.getElementById('confirm_button').setAttribute("href", link);
         }
         $(function() {
             $.noConflict();

@@ -12,11 +12,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     @include('includes.headers')
 </head>
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition dark-mode sidebar-mini">
     <div class="wrapper">
 
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand navbar-dark">
             <!-- Left navbar links -->
             <!-- Left navbar links -->
             <ul class="navbar-nav">
@@ -46,7 +46,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="index3.html" class="brand-link">
                 <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">LaraAdmin</span>
+                <span class="brand-text font-weight-light">{{ config('app.name', 'Laravel') }}</span>
             </a>
 
             <!-- Sidebar -->

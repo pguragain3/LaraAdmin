@@ -68,7 +68,7 @@ class UsersController extends Controller
         $user->is_active = $request['is_active'];
         if ($user->save()) {
             History::create([
-                'description' => 'Created User ' . $request['email'],
+                'description' => 'Created User with id ' . $user->id,
                 'user_id' => Auth::user()->id,
                 'type' => 1,
                 'ip_address' => UtilityFunctions::getUserIP(),
@@ -85,8 +85,16 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function viewDeleted(Request $request)
     {
+        abort_unless(Gate::allows('hasPermission','view_deleted_users'),403);
+        if (User::isAdmin()) {
+            $data = User::onlyTrashed()->with('roles')->whereNotIn('role', [1, 2])->get();
+            return view('admin.user.deleted', ['data' => $data]);
+        } else if (User::isSuperAdmin()) {
+            $data = User::onlyTrashed()->with('roles')->whereNotIn('role', [1])->get();
+            return view('admin.user.deleted', ['data' => $data]);
+        }
     }
 
     /**
@@ -149,9 +157,9 @@ class UsersController extends Controller
     {
         abort_unless(Gate::allows('hasPermission','delete_users'),403);
         $user = User::find($id);
-        if ($user->forceDelete()) {
+        if ($user->delete()) {
             History::create([
-                'description' => 'Deleted user with user id ' . $id,
+                'description' => 'Soft Deleted user with user id ' . $id,
                 'user_id' => Auth::user()->id,
                 'type' => 1,
                 'ip_address' => UtilityFunctions::getUserIP(),
@@ -161,4 +169,51 @@ class UsersController extends Controller
             return Redirect::back()->with('errorMessage', 'Error!! Failed to delete user');
         }
     }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function permanentDestroy($id)
+    {
+        abort_unless(Gate::allows('hasPermission','permanent_delete_users'),403);
+        $user = User::withTrashed()->find($id);
+        if ($user->forceDelete()) {
+            History::create([
+                'description' => 'Permanent Deleted user with user id ' . $id,
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! User Deleted Permanently');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! Failed to delete user');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        abort_unless(Gate::allows('hasPermission','restore_users'),403);
+        $user = User::withTrashed()->find($id);
+        if ($user->restore()) {
+            History::create([
+                'description' => 'Restored user with user id ' . $id,
+                'user_id' => Auth::user()->id,
+                'type' => 1,
+                'ip_address' => UtilityFunctions::getUserIP(),
+            ]);
+            return Redirect::back()->with('successMessage', 'Success!! User Restored');
+        } else {
+            return Redirect::back()->with('errorMessage', 'Error!! Failed to restore user');
+        }
+    }
+    
 }

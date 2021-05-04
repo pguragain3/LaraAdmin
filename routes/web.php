@@ -23,6 +23,9 @@ Route::prefix('/admin')->namespace('Admin')->name('admin.')->middleware(['web','
     Route::get('/users/edit/{id}','UsersController@edit')->name('users.edit');
     Route::post('/users/update','UsersController@update')->name('users.update');
     Route::get('/users/delete/{id}','UsersController@destroy')->name('users.destroy');
+    Route::get('/users/deleted','UsersController@viewDeleted')->name('users.viewDeleted');
+    Route::get('/users/restore/{id}','UsersController@restore')->name('users.restore');
+    Route::get('/users/deletePermanent/{id}','UsersController@permanentDestroy')->name('users.permanentDestroy');
 
     //Roles
     Route::get('/roles/','RolesController@index')->name('roles.index');
