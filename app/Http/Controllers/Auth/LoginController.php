@@ -62,7 +62,7 @@ class LoginController extends Controller
             'type' => 0,
             'ip_address' => UtilityFunctions::getuserIP()
         ]);
-        Session::flush();
+        Auth::logout();
         return redirect('/login');
     }
 
