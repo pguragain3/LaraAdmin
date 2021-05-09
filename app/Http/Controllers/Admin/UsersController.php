@@ -106,6 +106,7 @@ class UsersController extends Controller
     public function edit($id)
     {
         abort_unless(Gate::allows('hasPermission','update_users'),403);
+        abort_unless(Gate::allows('hasUpdateUserPermission',$id),403);
         $role = UtilityFunctions::getRole();
         $user = User::with('roles')->whereIn('id', [$id])->first();
         // dd($user,$role);
@@ -122,6 +123,7 @@ class UsersController extends Controller
     public function update(Request $request)
     {
         abort_unless(Gate::allows('hasPermission','update_users'),403);
+        abort_unless(Gate::allows('hasUpdateUserPermission',$request->id),403);
         $user = User::find($request->id);
         $this->validate($request,[
             'name' => 'required|min:3|regex:/[a-zA-Z]/',

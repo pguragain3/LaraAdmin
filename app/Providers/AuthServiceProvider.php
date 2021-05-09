@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -31,5 +32,8 @@ class AuthServiceProvider extends ServiceProvider
             return $role->permissions->contains('name',$permission);
         });
         //
+        Gate::define('hasUpdateUserPermission',function($user,$id){
+            return $user->role!=User::find($id)->role && User::find($id)->role!=1;
+        });
     }
 }
