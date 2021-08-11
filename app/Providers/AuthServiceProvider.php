@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('hasPermission',function($user,$permission){
             $role=Role::with('permissions')->whereIn('id',[$user->role])->first();
-            return $role->permissions->contains('name',$permission);
+            return $role->permissions->contains('name',$permission) && $user->is_active==1;;
         });
         //
         Gate::define('hasUpdateUserPermission',function($user,$id){

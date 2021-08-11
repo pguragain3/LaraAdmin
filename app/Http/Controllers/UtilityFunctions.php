@@ -3,6 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\History;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UtilityFunctions{
    static function getUserIP() {
@@ -33,5 +36,28 @@ class UtilityFunctions{
             $role = Role::with('permissions')->whereNotIn('id', [1, 2])->get();
         }
         return $role;
+    }
+
+    static function createHistory($message, $type)
+    {
+        History::create([
+            'description' => $message,
+            'user_id' => Auth::user()->id,
+            'type' => $type,
+            'ip_address' => UtilityFunctions::getUserIP(),
+        ]);
+    }
+
+    static function getEmptyName($input)
+    {
+        return (!isset($input) || trim($input) === '') ? null : $input;
+    }
+
+    static function customPaginate($currentPage,$array,$perPage,$request){
+        $itemCollection = collect($array);
+        $currentPageItems = $itemCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+        $paginatedItems= new LengthAwarePaginator($currentPageItems , count($itemCollection), $perPage);
+        $paginatedItems->setPath($request->url());
+        return $paginatedItems;
     }
 }

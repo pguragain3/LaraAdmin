@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
+Auth::routes(['register' => false,'password.request'=>false,'password.reset'=>false]);
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/admin', function () {
+    return redirect()->route('login');
+});
+
+Route::get('/home', [App\Http\Controllers\DashboardController::class, 'index'])->name('home');
 
 Route::prefix('/admin')->namespace('Admin')->name('admin.')->middleware(['web','auth'])->group(function () {
     //Users
@@ -43,6 +47,9 @@ Route::prefix('/admin')->namespace('Admin')->name('admin.')->middleware(['web','
     Route::post('/permissions/update','PermissionsController@update')->name('permissions.update');
     Route::get('/permissions/delete/{id}','PermissionsController@destroy')->name('permissions.destroy');
 
+    Route::get('/sitesettings/index', 'SiteSettingController@index')->name('sitesettings.index');
+    Route::post('/sitesettings/update', 'SiteSettingController@update')->name('sitesettings.update');
+    
     //History
     Route::get('/application-history/','HistoriesController@application_index')->name('application-history');
     Route::get('/system-history/','HistoriesController@system_index')->name('system-history');

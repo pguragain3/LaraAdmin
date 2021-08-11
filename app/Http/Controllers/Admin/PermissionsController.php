@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Role;
 use App\Models\History;
 use App\Models\Permission;
 use Illuminate\Http\Request;
@@ -49,6 +50,7 @@ class PermissionsController extends Controller
         $permission = new Permission;
         $permission->name = $convertedString=str_replace(' ', '-', $request['name']);
         if ($permission->save()) {
+            Role::find(1)->permissions()->attach($permission->id);
             History::create([
                 'description' => 'Created permission ' . $convertedString,
                 'user_id' => Auth::user()->id,
